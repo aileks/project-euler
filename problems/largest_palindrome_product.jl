@@ -3,29 +3,48 @@
 # Find the largest palindrome made from the product of two 3-digit numbers.
 
 function is_palindrome(n)
-    reversed_n = parse(Int, reverse(string(n)))
-    return n == reversed_n
+    n < 0 && return false
+
+    original = n
+    reversed = 0
+
+    while n > 0
+        reversed = 10 * reversed + n % 10
+        n = div(n, 10)
+    end
+
+    return original == reversed
 end
 
 function largest_3_digit_palindrome()
-    # maximize P
-    # subject to P = xy
-    # P = 100001a + 10010b + 1100c
-    # 100 <= x,y <= 999
-    # 1 <= a <= 9
-    # 0 <= b,c <= 9
+    # Maximize P = xy
+    # where 100 ≤ x, y ≤ 999
+    # and P is a palindrome
 
-    largest = 1
-    for x in 100:999
-        for y in 100:999
+    largest = 0
+    largest_pair = (0, 0)
+
+    for x in 999:-1:100
+        # since y <= x, x^2 is the largest remaining possible product
+        x * x <= largest && break
+
+        for y in x:-1:100
             product = x * y
-            if is_palindrome(product) && product > largest
+            product <= largest && break
+
+            if is_palindrome(product)
                 largest = product
+                largest_pair = (x, y)
+
+                # this is the largest possible palindrome for this value of x
+                break
             end
         end
     end
 
-    return largest
+    return largest, largest_pair
 end
 
-println(largest_3_digit_palindrome())
+palindrome, (x, y) = largest_3_digit_palindrome()
+
+println("$palindrome = $x * $y")
