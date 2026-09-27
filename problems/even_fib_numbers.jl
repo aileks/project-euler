@@ -2,19 +2,14 @@
 # By starting with 1 and 2, the first 10 terms will be: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
 # By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
 
-function sum_even_fibs(n)
-    even_sum = 2
-    terms = [1, 2]
-    while true
-        new_term = terms[end] + terms[end-1]
-        if new_term > n
-            break
-        end
+# It turns out every 3rd fib term is even
+function sum_even_fibs(limit)
+    a, b = 2, 8
+    even_sum = 0
 
-        append!(terms, new_term)
-        if new_term % 2 == 0
-            even_sum += new_term
-        end
+    while a <= limit
+        even_sum += a
+        a, b = b, 4b + a
     end
 
     return even_sum
